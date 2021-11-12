@@ -56,7 +56,7 @@ async function createOrder(cart_id) {
             "merchant_urls": {
                 "terms": "https://www.example.com/terms.html",
                 "checkout": "https://www.example.com/checkout.html",
-                "confirmation": `${process.env.CONFORMATION_URL}/confirmation?order_id={checkout.order.id}`,
+                "confirmation": `${process.env.CONFIRMATION_URL}/confirmation?order_id={checkout.order.id}`,
                 "push": "https://www.example.com/api/push"
             }
     }

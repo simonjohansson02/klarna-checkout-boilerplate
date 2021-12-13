@@ -1,5 +1,7 @@
 import { json } from 'express';
 import fetch from 'node-fetch';
+const { fakeStoreToKlarnaCart} = require('./fakestore')
+
 
 const BASE_URL = 'https://api.playground.klarna.com';
 const getCarts = require('../../static/carts');
@@ -21,10 +23,11 @@ function formatCart(currentCart) {
 }
 
 // 1. Add async createOrder function that returns Klarna response.json()
-async function createOrder(cart_id) {
+async function createOrder(fakeStoreCart) {
     
     
-        const currentCart = getCarts()[cart_id]
+        const currentCart = fakeStoreToKlarnaCart(fakeStoreCart);
+
         const formattedCart = formatCart(currentCart)
         
         let order_amount = 0;

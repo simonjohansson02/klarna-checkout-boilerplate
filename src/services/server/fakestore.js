@@ -27,9 +27,10 @@ function fakeStoreToKlarnaCart(fakeStoreCart) {
       "name": fakeStoreItem.title,
       "quantity": fakeStoreItem.quantity,
       "quantity_unit": "pcs",
-      "unit_price": parseInt(fakeStoreItem.price) * 100,
+      "unit_price": parseFloat(fakeStoreItem.price) * 100,
       "tax_rate": 1000,
       "total_discount_amount": 0,
+      "image_url": fakeStoreItem.image,
   }
   })
   return klarnaCart

@@ -26,17 +26,35 @@ function formatCart(currentCart) {
 async function createOrder(fakeStoreCart) {
     
     
-        const currentCart = fakeStoreToKlarnaCart(fakeStoreCart);
+    const currentCart = fakeStoreToKlarnaCart(fakeStoreCart);
 
-        const formattedCart = formatCart(currentCart)
-        
-        let order_amount = 0;
-        let order_tax_amount = 0;
+    const formattedCart = formatCart(currentCart)
     
-        formattedCart.forEach(currentCartItem => {
-            order_amount += currentCartItem.total_amount
-            order_tax_amount += currentCartItem.total_tax_amount
-        });
+    let order_amount = 0;
+    let order_tax_amount = 0;
+
+    formattedCart.forEach(currentCartItem => {
+        order_amount += currentCartItem.total_amount
+        order_tax_amount += currentCartItem.total_tax_amount
+    });
+
+    const SHIPPING_LIMIT_EXPRESS = 1000 * 100;
+    const SHIPPING_PRICE_EXPRESS = 109 * 100;
+
+    let shipping_options = [{
+        "id": "express_priority",
+        "name": "EXPRESS 1-2 Days",
+        "price": 0,
+        "tax_amount": 0,
+        "tax_rate": 0,
+    }];
+  
+
+    if (order_amount > SHIPPING_LIMIT_EXPRESS  || order_amount === 0 ? 0 : SHIPPING_PRICE_EXPRESS) {
+        shipping_options[0].price = SHIPPING_PRICE_EXPRESS;
+    }
+
+
 
     const path = "/checkout/v3/orders"
     const auth = getKlarnaAuth();
@@ -52,7 +70,7 @@ async function createOrder(fakeStoreCart) {
     const body = {
             "purchase_country": "SE",
             "purchase_currency": "SEK",
-            "locale": "sv-SE",
+            "locale": "sv-se",
             "order_amount": order_amount,
             "order_tax_amount": order_tax_amount,
             "order_lines": formattedCart,
@@ -61,7 +79,8 @@ async function createOrder(fakeStoreCart) {
                 "checkout": "https://www.example.com/checkout.html",
                 "confirmation": `${process.env.CONFIRMATION_URL}/confirmation?order_id={checkout.order.id}`,
                 "push": "https://www.example.com/api/push"
-            }
+            },
+            "shipping_options": shipping_options,
     }
 
     const stringifiedBody = JSON.stringify(body);
